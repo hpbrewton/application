@@ -39,6 +39,12 @@ there are still a couple of problems,
 such as when a DSL generates part of the program as some data (perhaps a full AST like in a Lisp) for the C code to then run over,
 or when a runtime has built in network communication (like Chapel) and global address space.
 Perhaps we can do some tracking of loads from the data section for tagging?
+A concrete place to start is in helping ML developers in higher level languages like Python, Julia, and Swift evaluate performance problems from ointeroperation with underlying linear algebra libraries.
+It is easy when developing in these high level languages to unintentionally cause many CPU/GPU synchronizations when moving data back and forth.
+Benjamin Welton and Barton Miller have worked on doing this in a more general setting:
+seeking to automatically correct applications at the binary level.
+Based on the grammar of our languages,
+could we automatically correct applications at the source level?
 I'm not sure, but this leaves open interesting questions that I think would be useful to pursue further.
 
 We have really powerful compilers that generate code, can we use them to generate static analyzers?
@@ -52,6 +58,14 @@ we can think of a system where we just have a database of unification statements
 and as we parse code we add the proper information into that database for later checking.
 But it does not seem obvious what is the best way to map type unification failures back to source in for an arbitrary language,
 and what if we want to do type-based-synthesis: can we use the parser definition to power that synthesis?
+One concrete place to start would be to provide in addition to the semantics of a parser generator rules about semantic equivalence.
+One could imagine providing the semantics of various manipulations for an image processing DSL,
+but add in useful lemmas about semantically equivalent programs
+(such as the convolution theorem),
+and ask a tool to synthesize an efficient progrma that meets a specification.
+This could build nicely on the SemGuS work by Kim, Hu, D'Antoni, and Reps at Wisconsin,
+wherein they provide the syntax and semantics (but not necessarily additional lemmas) of a language,
+and develop a synthesis algorithm for that language.
 This process of converting the semantics of the system back into syntax is in-part what Tiago Fierrari, Loris D'Antoni, Alexandra Silva, and I are experimenting with in a current research project at Wisconsin. 
 Using a sketch (a description in a DSL with some parts missing) of a network protocol and a database of examples,
 we are synthesizing an actual implemention of that protocol consistent with the examples given.
@@ -79,6 +93,10 @@ so that we would not have had to take all that careful time.
 A simple first step would be to just record where users pass in syntactically incorrect programs:
 recording the rule in our compiler that could not find a parse,
 perhaps indicating a friction in documentation or just in the language design itself.
+Loris D'Antoni has worked on tools that automatically help students grade and repair their automata.
+His 2015 work, while at Pennsylvania, provided automatic advice for students to create automata.
+While thool is different from what I have proposed in that was more paedological than instructive,
+one could imagine automatically aggregating transfomrations that fix problems for an arbitrary language.
 Languages like Rust have pretty useful helpers for understanding thatt language's linear type system,
 perhaps with the previous simple first step we could provide helpers for type systems for arbitrary languages as well.
 This will help provide further areas of research, 
@@ -95,6 +113,15 @@ we would need a way to automatically reverse any given parser.
 I do not know how to start on this project,
 so it would definitely require a good deal of thinking and talking,
 but I'm curious to see how it'd go.
+A lot of direct-manipulation systems use 2-d graphical interfaces to help change programs.
+Work done in a collaboration of the graphics and human computer interactions groups
+aimed to help users teach robots in the meat world, using a pair of tongs for demonstration.
+What if more experienced users could write programs using some DSL for their particular set of sensors and actuators,
+but also use this real world demonstration to make changes to that program.
+A concrete example: maybe you want to grab a brick with some pressure, but are not really sure with how much.
+You have program that has a space for little controller of the grabber that takes a pressure as input.
+What if you could just use the grabber to automatically create that little controller,
+but still keep the rest of your program up and running.
 This is probably the most difficult challenge, 
 but one could imagine using this to help fix tricky synchronization mechanisms by changing what the state should be at some time,
 or changing a query in a custom database DSL such that it gives a result that the user is expecting.

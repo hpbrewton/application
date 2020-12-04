@@ -20,7 +20,7 @@ I will also provide notes on my previous experience to better illustrate where t
 and how I am well suited to take them to completion.
 
 We have really powerful compilers that generate code, can we use them to generate code profilers and debuggers?
-When we right code we should care about (among other things) readability, performance, and robustness.
+When we write code we know should at least care about readability, performance, and robustness.
 Domain specific languages already provide us (hopefully) with very nice readability.
 But, often it can be hard to drag developers away from their shiny tools for C++ and Java into new languages.
 So, to solve that problem, how about we automatically create code profilers and debuggers from the compile?
@@ -38,7 +38,9 @@ Even after automating this process for arbitrary static languages,
 there are still a couple of problems, 
 such as when a DSL generates part of the program as some data (perhaps a full AST like in a Lisp) for the C code to then run over,
 or when a runtime has built in network communication (like Chapel) and global address space.
-Perhaps we can do some tracking of loads from the data section for tagging?
+One interesting puzzle is how can we extend graphical debuggers like Soren Lerner's work on programming blocks?
+It seems like it would be really nice to be able to use this environment in other languages besides Python:
+how can we make it easy to use this tool for any imperative language?
 Trying to solve this puzzle of making profilers and debuggers agnostic to and modular for arbitrary languages is one of the problems that I would seek to solve.
 
 We have really powerful compilers that generate code, can we use them to generate static analyzers and program synthesizers?
@@ -52,6 +54,12 @@ we can think of a system containing a database of unification statements as a C 
 and as we parse code we add the proper information into that database for later checking.
 But it does not seem obvious what is the best way to map type unification failures back to source for an arbitrary language,
 and what if we want to do type-based-synthesis: can we use the parser definition to power that synthesis?
+Nadia Polikarpova has made lots of interesting languages that use different extensions to type-systems to aid user synthesis.
+These are each powerful DSLs in their own right.
+It would be great if we could extract the semantics of these languages from their syntax that is:
+cna we define the type system and the synthesis for that type system in an extensive enough way.
+An extensive enough way to allow someone who creates a language that has powerful enough types to express refinement (consider a linear algebra package),
+to just include the engine in Synquid into their language.
 This process of converting the semantics of the system back into syntax is in-part what Tiago Ferreira, Loris D'Antoni, Alexandra Silva, and I are experimenting with in a current research project at Wisconsin.
 Using a sketch (a description in a DSL with some parts missing) of a network protocol and a database of examples,
 we are synthesizing an actual implementation of that protocol consistent with the examples given.
@@ -77,11 +85,10 @@ This required a very careful reading of the Go type system,
 and being very diligent in getting Go's duck types working right.
 It would be great if we could just feed any language to my system and automatically generate the type looker-upper,
 so that we would not have had to take all that careful time.
-A simple first step would be to just record where users pass-in syntactically incorrect programs:
-recording the rule in our compiler that could not find a parse,
-perhaps indicating a friction in documentation or just in the language design itself.
-Languages like Rust have pretty useful helpers for understanding that language's linear type system,
-perhaps with the previous simple first step we could provide helpers for type systems for arbitrary languages as well.
+This is similiar to the work that Ranjit Jhala has worked on with Rite.
+An first step that could be taken would be to make Rite agnostic, and be able to be applied to languages other than OCaml.
+Using parsers for various popular languages, could we would automatically create "Rites" for each of those languages?
+Could we do suggestions for richer type systems than OCaml such as for fixing problems in operations on NumPy array objects?
 This will help provide further areas of research, 
 as it will help language designers understand why users are having trouble with their DSL.
 
@@ -97,6 +104,13 @@ we would need a way to automatically reverse any given parser.
 I do not know how to start on this project,
 so it would definitely require a good deal of thinking and talking,
 but I'm curious to see how it'd go.
+Lerner, Foster, and Griswold developed a tool called Polymorphic blocks that might be an interesting place to start.
+I think of the blocks as an alternative syntax for the underlying system of the proof system.
+Another syntax would be the traditional judgement rules that we are used to.
+Perhaps we could figure out a way to automate the process of converting between syntaxes for the underlying system.
+To be concrete: we provide the conversion between the graphical syntax of block and the semantics of logic,
+and we provide the conversion between the textual syntax of judgements and the semantics of logic,
+and we create an automatically updating isomorphism between the two syntaxes.
 This is probably the most difficult challenge, 
 but one could imagine using this to help fix tricky synchronization mechanisms by changing what the state should be at some time,
 or changing a query in a custom database DSL such that it gives a result that the user is expecting.
@@ -110,3 +124,9 @@ and being able to automatically create this environment is what I hope to do at 
 I do not believe that I want to be a professor,
 but I want to work in a research team in a larger company trying to develop DSLs that help developers in those companies
 write readable, performant, and robust systems.
+The University of California, San Diego would be an excelent place for me to work on these problems and find more problems with this task.
+Polikarpova's work on using rich type systems to achieve synthesis,
+Jhala's work on creating tools that help users automatically fix their code,
+and Lerner's, Foster's, Griswolds's work on developing alternative interfaces for debugging and for prooving
+all would be great to wok on in their own right,
+and I would like to see how we can make those systems language agnostic and widely applicable.

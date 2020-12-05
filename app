@@ -17,11 +17,11 @@ we have these really powerful compilers that generate code, can we use them to g
 I will also provide notes on my previous experience to better illustrate where these ideas come from,
 and how I am well suited to take them to completion.
 
-We have really powerful compilers that generate code, can we use them to generate code profilers and debuggers?
-When we write code we should care about (among other things) readability, performance, and robustness.
+We have really powerful compilers that generate code, can we use them to generate code profilers?
+When we write code we should care about (among other things) performance, and robustness.
 Domain specific languages already provide us (hopefully) with very nice readability.
-But, often it can be hard to drag developers away from their shiny tools for C++ and Java into new languages.
-And, it takes a good bit of engineering to create these tools for new languages.
+But, often it can be hard to drag developers away from their shiny performance tools for C++ and Java into new languages.
+And, it takes a good bit of engineering to create profiling tools for new languages.
 To a first approximation, 
 we can use our DSL compiler to attach tags to our generated code language (perhaps C),
 and then use the standard C debug flag to generate tags into machine code,
@@ -45,6 +45,18 @@ Not only will this be useful for existing imperitive dynamic languages,
 but for potential domain specific langauges or general purpose langaugese that are yet to come.
 Trying to solve this puzzle of decoupling profilers and debuggers agnostic from source languages is one of the problems that I would seek to solve.
 
+We have really powerful compilers that generate code, can we use them to generate code debuggers?
+Whether deciding bank-loans, designing weather predictions, or providing macro-economic suggestions data can have a large impact on our results.
+It would be great if we could figure out how sensative our models are to changes in data,
+and perhaps also interesting if we could figure out how sensative our mdoels are to changes in operations.
+In order to do this we would need to be able to apply techniques seen in Python and Swift to automatically differentiate programs.
+This requires a good deal of programming effort even in languages that allow introspection on the source itself.
+This requires virtually making another compiler for static languages such as Fortran, MATLAB, or C++.
+Yet, many of our large dynamic models are often written in these very languages.
+Can we take a grammar and use it to automattically differeniate code fragments in it?
+Barowy, Gochev, and Berger worked on this problem of seeing how sensative excel models are to changes in particular cells.
+Can we decouple this algoriuthm form  excell and apply it to arbitrary languages?
+ 
 We have really powerful compilers that generate code, can we use them to generate static analyzers and program synthesizers?
 Static analyzers are powerful, and getting more so;
 this is especially the case when we can use them to start synthesizing parts of our program:
@@ -106,24 +118,6 @@ Languages like Rust have useful helpers for understanding that language's linear
 perhaps with the previous simple first step we could provide helpers for type systems for arbitrary languages as well.
 This will help provide further areas of research, 
 as it will help language designers understand why users are having trouble with their DSL.
-
-We have really powerful compilers that generate code, can we use them to generate direct-manipulation systems for our DSLs?
-Direct-manipulation allows us to combine the precision of text source code,
-with other systems drawing upon programmer intuitions of what they think the result should be.
-Examples of these systems include integrating a drawing environment with a coding environment
-such that when a user makes changes to the drawing it updates the code,
-and when a user makes changes to the code it makes changes to the drawing.
-The trick for these systems is to be able to convert semantics (say the final drawing) back into syntax (the code for that drawing, or the drawing environment).
-Which would mean that to do this generally,
-we would need a way to automatically reverse a given parser:
-converting semantics back into syntax.
-I do not know how to start on this project,
-so it would definitely require a good deal of thinking and talking,
-but I'm curious to see how it'd go.
-This is probably the most difficult challenge, 
-but one could imagine using this to help fix tricky synchronization mechanisms by changing what the state should be at some time,
-or changing a query in a custom database DSL such that it gives a result that the user is expecting.
-This line of research would allow us to expore new methods of development than justy are traditional source based systems.
 
 My goal is to make domain specific languages more widely used.
 There are a lot of success stories in research of DSLs  allowing users to write readable, performant, and robust code.

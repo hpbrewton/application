@@ -36,7 +36,13 @@ Even after automating this process for arbitrary static languages,
 there are still a couple of problems, 
 such as when a DSL generates part of the program as some data (perhaps a full AST like in a Lisp) for the C code to then run over,
 or when a runtime has built in network communication (like Chapel) and a global address space.
-Perhaps we can do some tracking of loads from the data section for tagging?
+Emery Berger's Scalene project is an excelent example of a profiler written for a dynamic language: Python.
+It has made making performant Python exceptionally easy,
+but I wish I could use this same tool in other dynamic languages (JavaScript and Scheme).
+An interesting place to start research at UMass-Amherst would be to take Scalene and figure out how to decouple it enough from Python
+in order to be able to plug and play any other dynamic language.
+Not only will this be useful for existing imperitive dynamic languages,
+but for potential domain specific langauges or general purpose langaugese that are yet to come.
 Trying to solve this puzzle of decoupling profilers and debuggers agnostic from source languages is one of the problems that I would seek to solve.
 
 We have really powerful compilers that generate code, can we use them to generate static analyzers and program synthesizers?
@@ -56,6 +62,15 @@ and then converting that formula back into the DSL for representing network prot
 While it was a pretty mechanical process to implement this conversion,
 it did take a couple of days, 
 and it would be great if we could do this sort of thing in a more general manner.
+Developers in a wide range of langauges often need to run iterations over large datasets.
+They often know roughly what the asymtotic time complexity is of the algorithm that they are trying to achieve,
+and they can write a formula stating the decision problem(s) they are trying to answer in the algorithm.
+Neil Immerman, and others, have already explored such algorithms applied to synthesizing graph classifiers.
+A nice feature of the work is that once a foruma is generated for the classifier it is already pretty easy to convert the formula to a wide range of languages.
+One interesting place to extend this simple inductive synthesis model to is multi-decision problems:
+can we create a tool that could use this model for specifications with integer solutions,
+what about specifications with variable model size?
+If we can, then we could create a tool that any user could plug and play into their language for ready synthesis.
 There are a lot of interesting questions about how to best tie a type checker to the source code,
 and even more interesting questions about other types of static analysis (can we do plug and play race-condition analysis?).
 Surely, this will provide interesting paths for future research.
@@ -77,6 +92,13 @@ and being very diligent in getting Go's duck types working right.
 It would be great if we could just feed any language to my system and automatically generate the type looker-upper,
 so that we would not have had to take all that careful time.
 Also, this system was not weighted to functions most commonly used.
+Yuriy Brun's work on repairihng code with semantic code search is of paritcular interst here.
+SearchRepair uses semantic rather than syntactic symallarity to find bug fixes.
+As of the 2015 paper, it seems that the tool is pretty tightly coupled to C and to only certain semantic constructs in C.
+What if we could provide a similiar tool to SearchRepair, but one that could find repairs in other languages and convert them to our language of interest.
+This could help solve a particularly common language with DSLs.
+DSLs are hard to fix because they are not widely seen on GitHub or StackOverflow.
+If we could extend SearchRepair to work in a cross langauge manner it would allow us to use fixes from other programming langauges in our new ones.
 A simple first step would be to just record where users pass-in syntactically incorrect programs:
 recording the rule in our compiler that could not find a parse,
 perhaps indicating a friction in documentation or just in the language design itself.

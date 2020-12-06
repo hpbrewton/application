@@ -36,30 +36,39 @@ Even after automating this process for arbitrary static languages,
 there are still a couple of problems, 
 such as when a DSL generates part of the program as some data (perhaps a full AST like in a Lisp) for the C code to then run over,
 or when a runtime has built in network communication (like Chapel) and a global address space.
-Perhaps we can do some tracking of loads from the data section for tagging?
+One intersting challenging is debugging and profiling on new ohardware like GPUs amnd other ASYCs.
+One very intersting area of modern advancement (especially after the recent news out of China and previous work at Google)
+is developing debugging tools for quantum hardware.
+Robert Rand has worked on QWIRE,
+which is a very convient tool for developing these quantum circuits,
+and also an interface for their use in a variety of othe programming languages.
+We could easily imagine developers using QWIRE in C or Python as part of a large code base.
+And, as with any code base we would need to be able to profile and debug any generation of quantum circuits.
+It would be intersting to see if we could develop tools that integrate well into existing debuggers (like LLDB)
+and profilers (like pprof),
+which can simulate the exectuation of QWIRE cicruits (and importantly the cost of loading and reading from quantum hardware)
+so that developers can start to use QWIRE in their work.
 Trying to solve this puzzle of decoupling profilers and debuggers agnostic from source languages is one of the problems that I would seek to solve.
 
-We have really powerful compilers that generate code, can we use them to generate static analyzers and program synthesizers?
-Static analyzers are powerful, and getting more so;
-this is especially the case when we can use them to start synthesizing parts of our program:
-perhaps trying to super-optimize that kernel at the core of your program,
-or to automatically that tree operation that you don't want to mess up.
-It would be really great if we could simply import some static analysis/synthesis into our language.
-Take importing a type checker as an example,
-it is not infeasable to simply build a typing datastructure and check unification.
-But it does not seem obvious what is the best way to map type unification failures back to source for an arbitrary language,
-and what if we want to do type-based-synthesis: can we use the parser definition to power that synthesis?
-This process of converting the semantics of the system back into syntax is in-part what Tiago Ferreira, Loris D'Antoni, Alexandra Silva, and I are experimenting with in a current research project at Wisconsin.
-Using a sketch (a description in a DSL with some parts missing) of a network protocol and a database of examples,
-we are synthesizing an actual implementation as logical formula of that protocol consistent with the examples given,
-and then converting that formula back into the DSL for representing network protocols.
-While it was a pretty mechanical process to implement this conversion,
-it did take a couple of days, 
-and it would be great if we could do this sort of thing in a more general manner.
-There are a lot of interesting questions about how to best tie a type checker to the source code,
-and even more interesting questions about other types of static analysis (can we do plug and play race-condition analysis?).
-Surely, this will provide interesting paths for future research.
-Trying  to solve this puzzle of making synthesizers and analyzers agnostic to language is one of the problems that I would seek to solve.
+We have really powerful compilers that generate code, can we use them to generate code for modern networked hardware?
+This Fall and last Summer I worked at Sandia National Laboratories where we primarily researched the use of the Chapel programming language for variouis linearalgebra challenges.
+One of the areas that we focused on was taking a Matlab code and developing the necessary framework in Chapel 
+so that someone who is familiar with MATLAB could easily convert some of their codes into Chapel.
+The problem here was that even after being careful about trying to "hide" the multi-node aspects of our code,
+we still were left with various artifacts of parallel code that would likely be fairly alien to MATLAB developers.
+This sparked a question in my head about whether we could automatically update languages for new hardware.
+If so, then we would be able to take a MATLAB (or say it's open source alternative, Octave) compiler,
+and automatically update it to work on a multi-node system.
+Similiar work has been done for other areas of the development tower such as for arbitrary operating systems.
+Could we do something similiar for languages?
+John Repppy has worked on the Manticore programming language:
+making the Standard ML programming language useable on very parallel systems.
+Could use the walth of research on this project,
+particularlly using the fairly robust runtime system,
+for automatically paralleizing other languages?
+If so, then we would  gain to advantages from the decoupling:
+first we would be abler to work on a general purpose runtime with a wider range of developer interest,
+and second we would be able to update existing languages to a parallel environment. 
 
 We have really powerful compilers that generate code, can we use them to figure out what problems users have with new DSLs?
 An important part of any user facing design process (which languages are obviously), is testing with real live users.
@@ -77,9 +86,14 @@ and being very diligent in getting Go's duck types working right.
 It would be great if we could just feed any language to my system and automatically generate the type looker-upper,
 so that we would not have had to take all that careful time.
 Also, this system was not weighted to functions most commonly used.
-A simple first step would be to just record where users pass-in syntactically incorrect programs:
-recording the rule in our compiler that could not find a parse,
-perhaps indicating a friction in documentation or just in the language design itself.
+A simple first step to this research would be to do case study for one particular language:
+learn what are the best techniques to do automated user testing for a new langauge, 
+and to learn what problem areas we might explore further when developing tooling for creating domain specific languages.
+Diderot, worked on in part by John Reppy, is one place we could start. 
+This language is an epitome of what a domain specific language should do:
+make it easy for users to write very complicated algorithms with very simple and beautiful code.
+The direction of this project would be to design a suer study which would determine what problems users have with the language.
+We would investigate both misunderstandings in semantics and syntax by developing automated system to aggregate this information.
 Languages like Rust have useful helpers for understanding that language's linear type system,
 perhaps with the previous simple first step we could provide helpers for type systems for arbitrary languages as well.
 This will help provide further areas of research, 
@@ -95,6 +109,15 @@ The trick for these systems is to be able to convert semantics (say the final dr
 Which would mean that to do this generally,
 we would need a way to automatically reverse a given parser:
 converting semantics back into syntax.
+Ravi Chugh's work at the University of Chicago is what has gotten me interested in this area of research.
+One interesting challenge that often faces developers that considering using new languages such as DSLs is the cost of switching their current code bases.
+What if we thought of the process of code rewriting as a process of direct manipulation?
+Just like in normal direct manipulation we have two interfaces that are changing the same underlying semantics,
+but in this case we have two languages that changing the same underlying semantics.
+As we change between languages in our code base,
+we may want to allow people to edit the code base in both the old an new language.
+If we had a system that could convert between the two through their agreed upon underlying semantics,
+it would be mucuh easier to go about solving this problem.
 I do not know how to start on this project,
 so it would definitely require a good deal of thinking and talking,
 but I'm curious to see how it'd go.
